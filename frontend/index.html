@@ -1,0 +1,175 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+    <title>Chat App</title>
+
+    <link rel="stylesheet"
+    href="./css/style.css">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+</head>
+
+<body>
+
+<div class="chat-container">
+
+    <!-- SIDEBAR -->
+
+    <div class="sidebar">
+
+        <div class="profile">
+
+            <img src="https://i.pravatar.cc/150?img=5">
+
+            <div>
+                <h2 id="username"></h2>
+                <small>Online</small>
+            </div>
+
+        </div>
+
+        <div class="search-box">
+
+            <input
+            type="text"
+            placeholder="Search chats...">
+
+        </div>
+
+        <div class="chat-list">
+
+            <div class="chat-item active">
+
+                <img src="https://i.pravatar.cc/150?img=10">
+
+                <div class="chat-info">
+                    <h4>Alex</h4>
+                    <small>Typing...</small>
+                </div>
+
+            </div>
+
+            <div class="chat-item">
+
+                <img src="https://i.pravatar.cc/150?img=12">
+
+                <div class="chat-info">
+                    <h4>Emma</h4>
+                    <small>See you soon!</small>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- CHAT MAIN -->
+
+    <div class="chat-main">
+
+        <!-- TOPBAR -->
+
+        <div class="chat-topbar">
+
+            <div class="top-user">
+
+                <img src="https://i.pravatar.cc/150?img=10">
+
+                <div>
+                    <h3>Alex</h3>
+                    <small>Online</small>
+                </div>
+
+            </div>
+
+            <div class="top-icons">
+
+                <i class="fa-solid fa-phone"></i>
+
+                <i class="fa-solid fa-video"></i>
+
+                <i class="fa-solid fa-circle-info"></i>
+
+            </div>
+
+        </div>
+
+        <!-- MESSAGES -->
+
+        <div class="messages" id="messages">
+
+            <div class="message received">
+
+                Hey! How's your frontend project going?
+
+                <div class="time">
+                    10:30 AM
+                </div>
+
+            </div>
+
+            <div class="message sent">
+
+                It's looking modern now 🔥
+
+                <div class="time">
+                    10:31 AM
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- INPUT AREA -->
+
+        <div class="message-input">
+
+            <button class="icon-btn">
+                <i class="fa-regular fa-face-smile"></i>
+            </button>
+
+            <button class="icon-btn">
+                <i class="fa-solid fa-paperclip"></i>
+            </button>
+
+            <input
+            type="text"
+            id="messageInput"
+            placeholder="Type a message...">
+
+            <button class="icon-btn">
+                <i class="fa-solid fa-microphone"></i>
+            </button>
+
+            <button
+            class="icon-btn send-btn"
+            id="sendBtn">
+
+                <i class="fa-solid fa-paper-plane"></i>
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="./js/script.js"></script>
+<script>
+    document.getElementById("username").innerText =
+        localStorage.getItem("username");
+</script>
+
+</body>
+</html>
+

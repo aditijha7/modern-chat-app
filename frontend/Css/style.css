@@ -1,0 +1,636 @@
+
+
+:root{
+    --primary: #b74f4f;
+    --secondary:   #87CEEB;
+    --background: #ffffff;
+    --card-bg:#ce75e0;
+    --text: black;
+    --muted: #94A1B2;
+    --glass: rgba(255,255,255,0.05);
+    --border: rgba(255,255,255,0.08);
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Inter',sans-serif;
+}
+
+body{
+   background: linear-gradient(
+    135deg,
+    #b5dff0,
+    #6f7d90
+);
+    color: var(--text);
+    overflow-x:hidden;
+    overflow-y:auto;
+    font-weight: bold;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+/* =========================
+   BACKGROUND BLOBS
+========================= */
+
+.blob{
+    position:absolute;
+    border-radius:50%;
+    filter: blur(90px);
+    opacity:0.5;
+    animation: float 8s infinite ease-in-out;
+    z-index:-1;
+}
+
+.blob1{
+    width:300px;
+    height:300px;
+    background: #e7bf82;
+    top:-100px;
+    left:-100px;
+}
+
+.blob2{
+    width:250px;
+    height:250px;
+    background: #B22222;
+    bottom:-100px;
+    right:-100px;
+}
+
+@keyframes float{
+    0%,100%{
+        transform: translateY(0px);
+    }
+
+    50%{
+        transform: translateY(30px);
+    }
+}
+
+/* =========================
+   AUTH PAGES
+========================= */
+
+.auth-container{
+    width:100%;
+    height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    overflow:hidden;
+}
+
+.auth-left{
+    flex:1;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:40px;
+}
+
+.auth-left h1{
+    font-size:4rem;
+    line-height:1.2;
+    max-width:500px;
+    font-weight:700;
+}
+
+.gradient-text{
+    background: linear-gradient(
+        135deg,
+        var(--primary),
+        var(--secondary)
+    );
+}
+
+.auth-right{
+    flex:1;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* =========================
+   GLASS CARD
+========================= */
+
+.glass-card{
+    width:400px;
+    padding:40px;
+
+    background: rgba(255,255,255,0.05);
+
+    border:1px solid var(--border);
+
+    backdrop-filter: blur(20px);
+
+    border-radius:24px;
+
+    box-shadow:
+    0 10px 40px rgba(0,0,0,0.4);
+
+    transition:0.3s;
+}
+
+.glass-card:hover{
+    transform: translateY(-5px);
+}
+
+.glass-card h2{
+    margin-bottom:30px;
+    font-size:2rem;
+}
+
+/* =========================
+   INPUTS
+========================= */
+
+.input-group{
+    margin-bottom:20px;
+}
+
+.input-group input{
+    width:100%;
+    padding:16px;
+
+    border:none;
+    outline:none;
+
+    border-radius:14px;
+
+    background: rgba(255,255,255,0.08);
+
+    color:var(--text);
+
+    border:1px solid transparent;
+
+    transition:0.3s;
+}
+
+.input-group input::placeholder{
+    color:var(--muted);
+}
+
+.input-group input:focus{
+    border-color: var(--primary);
+
+    box-shadow:
+    0 0 15px rgba(127,90,240,0.5);
+}
+
+/* =========================
+   OPTIONS
+========================= */
+
+.options{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:20px;
+
+    font-size:14px;
+    color:var(--muted);
+}
+
+.options a{
+    color:var(--primary);
+    text-decoration:none;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.btn{
+    width:100%;
+    padding:16px;
+
+    border:none;
+    border-radius:14px;
+
+    .btn{
+    background: linear-gradient(
+        90deg,
+        #87CEEB,
+        #90EE90,
+        #B22222
+    );
+}
+
+    color:white;
+
+    font-size:16px;
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:0.3s;
+}
+
+.btn:hover{
+    transform: translateY(-3px);
+
+    box-shadow:
+    0 10px 20px rgba(127,90,240,0.4);
+}
+
+/* =========================
+   SOCIAL BUTTONS
+========================= */
+
+.social-buttons{
+    display:flex;
+    gap:10px;
+    margin-top:20px;
+}
+
+.social-btn{
+    flex:1;
+    padding:14px;
+
+    border-radius:12px;
+
+    border:1px solid var(--border);
+
+    background: rgba(255,255,255,0.05);
+
+    color:var(--text);
+
+    cursor:pointer;
+
+    transition:0.3s;
+}
+
+.social-btn:hover{
+    background: rgba(255,255,255,0.1);
+
+    transform: translateY(-2px);
+}
+
+/* =========================
+   CHAT LAYOUT
+========================= */
+
+.chat-container{
+    display:flex;
+    height:100vh;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar{
+    width:320px;
+
+    background: linear-gradient(
+    180deg,
+    #c09dd3,
+    #7fc07f,
+    #9e5858
+);
+
+    border-right:1px solid var(--border);
+
+    display:flex;
+    flex-direction:column;
+    padding:20px;
+    text-size-adjust:var(--border);
+}
+
+/* PROFILE */
+
+.profile{
+    display:flex;
+    align-items:center;
+    gap:15px;
+
+    margin-bottom:25px;
+}
+
+.profile img{
+    width:55px;
+    height:55px;
+
+    border-radius:50%;
+}
+
+/* SEARCH */
+
+.search-box input{
+    width:100%;
+    padding:14px;
+
+    border:none;
+    outline:none;
+
+    border-radius:12px;
+
+    background: rgba(255,255,255,0.05);
+
+    color:white;
+
+    margin-bottom:20px;
+}
+
+/* CHAT LIST */
+
+.chat-list{
+    flex:1;
+    overflow-y:auto;
+}
+
+.chat-item{
+    display:flex;
+    align-items:center;
+    gap:15px;
+
+    padding:14px;
+
+    border-radius:14px;
+
+    margin-bottom:10px;
+
+    cursor:pointer;
+
+    transition:0.3s;
+}
+
+.chat-item:hover{
+    background: rgba(255,255,255,0.05);
+}
+
+.chat-item.active{
+    background: linear-gradient(
+        135deg,
+        rgba(127,90,240,0.3),
+        rgba(44,182,125,0.2)
+    );
+}
+
+.chat-item img{
+    width:50px;
+    height:50px;
+
+    border-radius:50%;
+}
+
+/* =========================
+   CHAT MAIN
+========================= */
+
+.chat-main{
+    flex:1;
+
+    display:flex;
+    flex-direction:column;
+}
+
+/* =========================
+   TOPBAR
+========================= */
+
+.chat-topbar{
+    height:80px;
+
+    border-bottom:1px solid var(--border);
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 30px;
+
+    background: rgba(255,255,255,0.02);
+}
+
+.top-user{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.top-user img{
+    width:50px;
+    height:50px;
+
+    border-radius:50%;
+}
+
+.top-icons{
+    display:flex;
+    gap:20px;
+
+    font-size:20px;
+
+    cursor:pointer;
+}
+
+.top-icons i{
+    transition:0.3s;
+}
+
+.top-icons i:hover{
+    color: var(--primary);
+
+    transform: scale(1.1);
+}
+
+/* =========================
+   MESSAGES
+========================= */
+
+.messages{
+    flex:1;
+
+    padding:30px;
+
+    overflow-y:auto;
+
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+.message{
+    max-width:65%;
+
+    padding:14px 18px;
+
+    border-radius:18px;
+
+    line-height:1.5;
+
+    animation: fadeIn 0.4s ease;
+}
+
+.sent{
+    align-self:flex-end;
+
+    background: linear-gradient(
+        135deg,
+        var(--primary),
+        #6c47df
+    );
+}
+
+.received{
+    align-self:flex-start;
+
+    background: var(--card-bg);
+}
+
+.time{
+    font-size:12px;
+    color:var(--muted);
+
+    margin-top:6px;
+}
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform: translateY(10px);
+    }
+
+    to{
+        opacity:1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================
+   INPUT AREA
+========================= */
+
+.message-input{
+    padding:20px;
+
+    border-top:1px solid var(--border);
+
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.message-input input{
+    flex:1;
+
+    padding:16px;
+
+    border:none;
+    outline:none;
+
+    border-radius:50px;
+
+    background: rgba(255,255,255,0.06);
+
+    color:white;
+}
+
+.message-input input::placeholder{
+    color:var(--muted);
+}
+
+/* ICON BUTTONS */
+
+.icon-btn{
+    width:50px;
+    height:50px;
+
+    border:none;
+    border-radius:50%;
+
+    background: rgba(255,255,255,0.06);
+
+    color:white;
+
+    cursor:pointer;
+
+    transition:0.3s;
+}
+
+.icon-btn:hover{
+    background: var(--primary);
+
+    transform: scale(1.1);
+}
+
+/* SEND BUTTON */
+
+.send-btn{
+    background: linear-gradient(
+        135deg,
+        var(--primary),
+        var(--secondary)
+    );
+}
+
+/* =========================
+   SCROLLBAR
+========================= */
+
+::-webkit-scrollbar{
+    width:8px;
+}
+
+::-webkit-scrollbar-track{
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb{
+    background: rgba(255,255,255,0.15);
+
+    border-radius:10px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:900px){
+
+    .auth-left{
+        display:none;
+    }
+
+    .auth-right{
+        width:100%;
+    }
+
+    .sidebar{
+        width:90px;
+    }
+
+    .chat-info{
+        display:none;
+    }
+}
+
+@media(max-width:600px){
+
+    .sidebar{
+        display:none;
+    }
+
+    .message{
+        max-width:90%;
+    }
+
+    .chat-topbar{
+        padding:0 15px;
+    }
+
+    .messages{
+        padding:15px;
+    }
+
+    .glass-card{
+        width:90%;
+    }
+}
