@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,8 +38,8 @@
         <div class="search-box">
 
             <input
-            type="text"
-            placeholder="Search chats...">
+                type="text"
+                placeholder="Search chats...">
 
         </div>
 
@@ -107,25 +106,7 @@
 
         <div class="messages" id="messages">
 
-            <div class="message received">
-
-                Hey! How's your frontend project going?
-
-                <div class="time">
-                    10:30 AM
-                </div>
-
-            </div>
-
-            <div class="message sent">
-
-                It's looking modern now 🔥
-
-                <div class="time">
-                    10:31 AM
-                </div>
-
-            </div>
+            <!-- Messages will be loaded dynamically -->
 
         </div>
 
@@ -142,17 +123,17 @@
             </button>
 
             <input
-            type="text"
-            id="messageInput"
-            placeholder="Type a message...">
+                type="text"
+                id="messageInput"
+                placeholder="Type a message...">
 
             <button class="icon-btn">
                 <i class="fa-solid fa-microphone"></i>
             </button>
 
             <button
-            class="icon-btn send-btn"
-            id="sendBtn">
+                class="icon-btn send-btn"
+                id="sendBtn">
 
                 <i class="fa-solid fa-paper-plane"></i>
 
@@ -164,12 +145,19 @@
 
 </div>
 
+<!-- AXIOS -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<!-- YOUR SCRIPT -->
 <script src="./js/script.js"></script>
+
 <script>
+
+    // Show logged in username
     document.getElementById("username").innerText =
         localStorage.getItem("username");
+
 </script>
 
 </body>
 </html>
-

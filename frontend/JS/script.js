@@ -118,3 +118,118 @@ if (loginForm) {
     });
 
 }
+// =========================
+// CHAT
+// =========================
+
+// Elements
+const sendBtn = document.getElementById("sendBtn");
+const messageInput = document.getElementById("messageInput");
+const messagesDiv = document.getElementById("messages");
+
+// Temporary IDs (replace later with logged-in users)
+const senderId = "64a8efeb7256617ad7c2a870";
+const receiverId = "64a8f60cc22b0551bed05d4d";
+
+
+// LOAD MESSAGES
+
+async function loadMessages() {
+
+    if (!messagesDiv) return;
+
+    try {
+
+        const response = await axios.get(
+
+            `http://localhost:5000/api/messages/${senderId}/${receiverId}`
+
+        );
+
+        messagesDiv.innerHTML = "";
+
+        response.data.messages.forEach((msg) => {
+
+            const div = document.createElement("div");
+
+            if (msg.senderId === senderId) {
+
+                div.className = "message sent";
+
+            } else {
+
+                div.className = "message received";
+
+            }
+
+            div.innerHTML = `
+                ${msg.text}
+                <div class="time">
+                    ${new Date(msg.createdAt).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit"
+                    })}
+                </div>
+            `;
+
+            messagesDiv.appendChild(div);
+
+        });
+
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+    } catch (error) {
+
+        console.log(error);
+
+    }
+
+}
+
+
+// SEND MESSAGE
+
+if (sendBtn) {
+
+    sendBtn.addEventListener("click", async () => {
+
+        const text = messageInput.value.trim();
+
+        if (!text) return;
+
+        try {
+
+            await axios.post(
+
+                "http://localhost:5000/api/messages/send",
+
+                {
+                    senderId,
+                    receiverId,
+                    text
+                }
+
+            );
+
+            messageInput.value = "";
+
+            loadMessages();
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
+
+    });
+
+}
+
+
+// LOAD CHAT WHEN PAGE OPENS
+
+if (messagesDiv) {
+
+    loadMessages();
+
+}
