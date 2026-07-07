@@ -10,29 +10,19 @@ if (registerForm) {
 
         e.preventDefault();
 
-        const username =
-            document.getElementById("username").value;
+        const username = document.getElementById("username").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
 
-        const email =
-            document.getElementById("email").value;
-
-        const password =
-            document.getElementById("password").value;
-
-        const confirmPassword =
-            document.getElementById("confirmPassword").value;
-
-        // CHECK PASSWORD MATCH
         if (password !== confirmPassword) {
-
             alert("Passwords do not match ❌");
-
             return;
         }
 
         try {
 
-            const response = await axios.post(
+            await axios.post(
                 "http://localhost:5000/api/auth/register",
                 {
                     username,
@@ -42,23 +32,19 @@ if (registerForm) {
             );
 
             alert("Registration Successful ✅");
-
-            console.log(response.data);
-
-            // REDIRECT TO LOGIN PAGE
             window.location.href = "login.html";
 
         } catch (error) {
 
             console.log(error);
-
-            alert(error.response.data.message);
+            alert(error.response?.data?.message || "Registration Failed");
 
         }
 
     });
 
 }
+
 
 
 // =========================
@@ -73,11 +59,8 @@ if (loginForm) {
 
         e.preventDefault();
 
-        const email =
-            document.getElementById("loginEmail").value;
-
-        const password =
-            document.getElementById("loginPassword").value;
+        const email = document.getElementById("loginEmail").value;
+        const password = document.getElementById("loginPassword").value;
 
         try {
 
@@ -89,78 +72,162 @@ if (loginForm) {
                 }
             );
 
+            console.log("LOGIN RESPONSE:", response.data);
+
+            localStorage.setItem("token", response.data.token);
+            localStorage.setItem("username", response.data.username);
+            localStorage.setItem("userId", response.data._id);
+
+            console.log("Saved UserId:", localStorage.getItem("userId"));
+
             alert("Login Successful ✅");
 
-            console.log(response.data);
-
-            // SAVE TOKEN
-            localStorage.setItem(
-                "token",
-                response.data.token
-            );
-
-            localStorage.setItem(
-                "username",
-                response.data.username
-            );
-
-            // REDIRECT
             window.location.href = "index.html";
 
         } catch (error) {
 
             console.log(error);
-
-            alert(error.response.data.message);
+            alert(error.response?.data?.message || "Login Failed");
 
         }
 
     });
 
 }
+
+
+
 // =========================
 // CHAT
 // =========================
 
-// Elements
 const sendBtn = document.getElementById("sendBtn");
 const messageInput = document.getElementById("messageInput");
 const messagesDiv = document.getElementById("messages");
+const chatList = document.getElementById("chatList");
 
-// Temporary IDs (replace later with logged-in users)
-const senderId = "64a8efeb7256617ad7c2a870";
-const receiverId = "64a8f60cc22b0551bed05d4d";
+let senderId = localStorage.getItem("userId");
+let receiverId = "";
+
+console.log("Sender ID:", senderId);
+
+// If userId doesn't exist, go back to login
+if (!senderId && window.location.pathname.includes("index.html")) {
+
+    alert("Please login first.");
+
+    window.location.href = "login.html";
+
+}
 
 
-// LOAD MESSAGES
 
-async function loadMessages() {
+// =========================
+// SHOW LOGGED USER
+// =========================
 
-    if (!messagesDiv) return;
+const username = localStorage.getItem("username");
+
+if (document.getElementById("username")) {
+
+    document.getElementById("username").innerText = username;
+
+}
+
+
+
+// =========================
+// LOAD USERS
+// =========================
+
+if (chatList) {
+
+    loadUsers();
+
+}
+
+async function loadUsers() {
 
     try {
 
         const response = await axios.get(
+            "http://localhost:5000/api/users"
+        );
 
+        const users = response.data.users;
+
+        chatList.innerHTML = "";
+
+        users.forEach(user => {
+
+            if (user._id === senderId) return;
+
+            const chatItem = document.createElement("div");
+
+            chatItem.className = "chat-item";
+
+            chatItem.innerHTML = `
+                <img src="https://i.pravatar.cc/150?u=${user._id}">
+                <div class="chat-info">
+                    <h4>${user.username}</h4>
+                    <small>Click to chat</small>
+                </div>
+            `;
+
+            chatItem.onclick = () => {
+
+                receiverId = user._id;
+
+                const topName = document.querySelector(".top-user h3");
+
+                if (topName) {
+
+                    topName.innerText = user.username;
+
+                }
+
+                loadMessages();
+
+            };
+
+            chatList.appendChild(chatItem);
+
+        });
+
+    } catch (error) {
+
+        console.log(error);
+
+    }
+
+}
+
+
+
+// =========================
+// LOAD MESSAGES
+// =========================
+
+async function loadMessages() {
+
+    if (!receiverId) return;
+
+    try {
+
+        const response = await axios.get(
             `http://localhost:5000/api/messages/${senderId}/${receiverId}`
-
         );
 
         messagesDiv.innerHTML = "";
 
-        response.data.messages.forEach((msg) => {
+        response.data.messages.forEach(msg => {
 
             const div = document.createElement("div");
 
-            if (msg.senderId === senderId) {
-
-                div.className = "message sent";
-
-            } else {
-
-                div.className = "message received";
-
-            }
+            div.className =
+                msg.senderId == senderId
+                    ? "message sent"
+                    : "message received";
 
             div.innerHTML = `
                 ${msg.text}
@@ -187,28 +254,42 @@ async function loadMessages() {
 }
 
 
+
+// =========================
 // SEND MESSAGE
+// =========================
 
 if (sendBtn) {
 
     sendBtn.addEventListener("click", async () => {
 
+        if (!receiverId) {
+
+            alert("Please select a user first.");
+
+            return;
+
+        }
+
         const text = messageInput.value.trim();
 
         if (!text) return;
 
+        console.log({
+            senderId,
+            receiverId,
+            text
+        });
+
         try {
 
             await axios.post(
-
                 "http://localhost:5000/api/messages/send",
-
                 {
                     senderId,
                     receiverId,
                     text
                 }
-
             );
 
             messageInput.value = "";
@@ -222,14 +303,5 @@ if (sendBtn) {
         }
 
     });
-
-}
-
-
-// LOAD CHAT WHEN PAGE OPENS
-
-if (messagesDiv) {
-
-    loadMessages();
 
 }

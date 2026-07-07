@@ -4,6 +4,9 @@ const Message = require("../models/Message");
 // SEND MESSAGE
 const sendMessage = async (req, res) => {
 
+    console.log(req.body);
+
+
     try {
 
         const { senderId, receiverId, text } = req.body;
@@ -35,6 +38,8 @@ const sendMessage = async (req, res) => {
 
 // GET MESSAGES
 const getMessages = async (req, res) => {
+
+    console.log(req.params);
 
     try {
 
