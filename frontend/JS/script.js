@@ -106,6 +106,12 @@ const messageInput = document.getElementById("messageInput");
 const messagesDiv = document.getElementById("messages");
 const chatList = document.getElementById("chatList");
 
+const socket = io("http://localhost:5000");
+
+socket.on("connect", () => {
+    console.log("Connected to Socket.IO:", socket.id);
+});
+
 let senderId = localStorage.getItem("userId");
 let receiverId = "";
 
@@ -283,7 +289,7 @@ if (sendBtn) {
 
         try {
 
-            await axios.post(
+           await axios.post(
                 "http://localhost:5000/api/messages/send",
                 {
                     senderId,
@@ -292,34 +298,23 @@ if (sendBtn) {
                 }
             );
 
+            // Tell all connected clients a new message arrived
+            socket.emit("sendMessage", {
+                senderId,
+                receiverId,
+                text
+            });
+
             messageInput.value = "";
 
-            loadMessages();
-
-        } catch (error) {
+        }
+        catch (error) {
 
             console.log(error);
 
         }
 
     });
-    // =========================
-// AUTO REFRESH MESSAGES
-// =========================
-
-if (messagesDiv) {
-
-    setInterval(() => {
-
-        if (receiverId) {
-
-            loadMessages();
-
-        }
-
-    }, 2000);
-
-}
 }
 // =========================
 // LOGOUT
@@ -344,3 +339,16 @@ if (logoutBtn) {
     });
 
 }
+socket.on("receiveMessage", (message) => {
+
+    // Refresh the chat only if the message belongs to
+    // the currently opened conversation
+
+    if (
+        (message.senderId === senderId && message.receiverId === receiverId) ||
+        (message.senderId === receiverId && message.receiverId === senderId)
+    ) {
+        loadMessages();
+    }
+
+});

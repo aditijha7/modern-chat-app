@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const { Server } = require("socket.io");
 
 const connectDB = require("./config/db");
 
@@ -40,6 +41,29 @@ app.get("/", (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
+});
+const io = new Server(server, {
+    cors: {
+        origin: "*"
+    }
+});
+
+io.on("connection", (socket) => {
+
+    console.log("User Connected:", socket.id);
+    
+    socket.on("sendMessage", (message) => {
+
+    io.emit("receiveMessage", message);
+
+});
+
+    socket.on("disconnect", () => {
+
+        console.log("User Disconnected:", socket.id);
+
+    });
+
 });
