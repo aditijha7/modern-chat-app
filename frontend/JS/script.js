@@ -94,9 +94,6 @@ if (loginForm) {
     });
 
 }
-
-
-
 // =========================
 // CHAT
 // =========================
@@ -108,15 +105,24 @@ const chatList = document.getElementById("chatList");
 
 const socket = io("http://localhost:5000");
 
+const typingStatus = document.getElementById("typingStatus");
+
 socket.on("connect", () => {
+
     console.log("Connected to Socket.IO:", socket.id);
+
 });
 
 let senderId = localStorage.getItem("userId");
+
 if (senderId) {
+
     socket.emit("userConnected", senderId);
+
 }
+
 let receiverId = "";
+
 let onlineUsers = [];
 
 socket.on("onlineUsers", (users) => {
@@ -125,10 +131,70 @@ socket.on("onlineUsers", (users) => {
 
     loadUsers();
 
+    if (receiverId && typingStatus) {
+
+        typingStatus.innerText = onlineUsers.includes(receiverId)
+            ? "Online"
+            : "Offline";
+
+    }
+
 });
+
+let typingTimeout;
+
+if (messageInput) {
+
+    messageInput.addEventListener("input", () => {
+
+        if (!receiverId) return;
+
+        socket.emit("typing", {
+            senderId,
+            receiverId
+        });
+
+        clearTimeout(typingTimeout);
+
+        typingTimeout = setTimeout(() => {
+
+            socket.emit("stopTyping", {
+                senderId,
+                receiverId
+            });
+
+        }, 1000);
+
+    });
+
+}
+
+socket.on("typing", (data) => {
+
+    if (data.senderId === receiverId && typingStatus) {
+
+        typingStatus.innerText = "Typing...";
+
+    }
+
+});
+
+socket.on("stopTyping", (data) => {
+
+    if (data.senderId === receiverId && typingStatus) {
+
+        typingStatus.innerText = onlineUsers.includes(receiverId)
+            ? "Online"
+            : "Offline";
+
+    }
+
+});
+
 console.log("Sender ID:", senderId);
 
 // If userId doesn't exist, go back to login
+
 if (!senderId && window.location.pathname.includes("index.html")) {
 
     alert("Please login first.");
@@ -203,6 +269,14 @@ async function loadUsers() {
                     topName.innerText = user.username;
 
                 }
+
+    if (typingStatus) {
+
+        typingStatus.innerText = onlineUsers.includes(user._id)
+            ? "Online"
+            : "Offline";
+
+    }
 
                 loadMessages();
 
@@ -318,6 +392,11 @@ if (sendBtn) {
             });
 
             messageInput.value = "";
+
+            socket.emit("stopTyping", {
+                senderId,
+                receiverId
+            });
 
         }
         catch (error) {
