@@ -113,8 +113,19 @@ socket.on("connect", () => {
 });
 
 let senderId = localStorage.getItem("userId");
+if (senderId) {
+    socket.emit("userConnected", senderId);
+}
 let receiverId = "";
+let onlineUsers = [];
 
+socket.on("onlineUsers", (users) => {
+
+    onlineUsers = users;
+
+    loadUsers();
+
+});
 console.log("Sender ID:", senderId);
 
 // If userId doesn't exist, go back to login
@@ -125,9 +136,6 @@ if (!senderId && window.location.pathname.includes("index.html")) {
     window.location.href = "login.html";
 
 }
-
-
-
 // =========================
 // SHOW LOGGED USER
 // =========================
@@ -172,11 +180,15 @@ async function loadUsers() {
 
             chatItem.className = "chat-item";
 
+            const status = onlineUsers.includes(user._id)
+                ? "🟢 Online"
+                : "⚪ Offline";
+
             chatItem.innerHTML = `
                 <img src="https://i.pravatar.cc/150?u=${user._id}">
                 <div class="chat-info">
-                    <h4>${user.username}</h4>
-                    <small>Click to chat</small>
+                <h4>${user.username}</h4>
+                <small>${status}</small>
                 </div>
             `;
 

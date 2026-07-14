@@ -49,18 +49,35 @@ const io = new Server(server, {
         origin: "*"
     }
 });
+const onlineUsers = {};
 
 io.on("connection", (socket) => {
 
     console.log("User Connected:", socket.id);
-    
-    socket.on("sendMessage", (message) => {
 
-    io.emit("receiveMessage", message);
+    socket.on("userConnected", (userId) => {
 
-});
+        onlineUsers[userId] = socket.id;
+
+        io.emit("onlineUsers", Object.keys(onlineUsers));
+
+    });
 
     socket.on("disconnect", () => {
+
+        for (let userId in onlineUsers) {
+
+            if (onlineUsers[userId] === socket.id) {
+
+                delete onlineUsers[userId];
+
+                break;
+
+            }
+
+        }
+
+        io.emit("onlineUsers", Object.keys(onlineUsers));
 
         console.log("User Disconnected:", socket.id);
 
