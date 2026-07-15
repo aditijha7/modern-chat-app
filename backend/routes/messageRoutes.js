@@ -4,7 +4,8 @@ const router = express.Router();
 
 const {
     sendMessage,
-    getMessages
+    getMessages,
+    markSeen
 } = require("../controllers/messageController");
 
 
@@ -16,4 +17,8 @@ router.post("/send", sendMessage);
 router.get("/:senderId/:receiverId", getMessages);
 
 
+// MARK MESSAGES AS SEEN
+router.put("/seen", markSeen);
+
+router.put("/seen", markSeen);
 module.exports = router;

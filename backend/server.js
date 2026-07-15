@@ -113,6 +113,19 @@ io.on("connection", (socket) => {
 
     });
 
+    // MESSAGE SEEN
+    socket.on("messageSeen", ({ senderId, receiverId }) => {
+
+        const senderSocket = onlineUsers[senderId];
+
+        if (senderSocket) {
+
+        io.to(senderSocket).emit("messageSeen");
+
+    }
+
+    });
+
     // DISCONNECT
     socket.on("disconnect", () => {
 

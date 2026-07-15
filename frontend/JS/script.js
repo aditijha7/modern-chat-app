@@ -261,25 +261,35 @@ async function loadUsers() {
             chatItem.onclick = () => {
 
                 receiverId = user._id;
-
                 const topName = document.querySelector(".top-user h3");
 
-                if (topName) {
+            if (topName) {
+                topName.innerText = user.username;
+            }
 
-                    topName.innerText = user.username;
+            if (typingStatus) {
 
-                }
+                typingStatus.innerText = onlineUsers.includes(user._id)
+                ? "Online"
+                : "Offline";
+            }
 
-    if (typingStatus) {
+        // MARK MESSAGES AS SEEN
 
-        typingStatus.innerText = onlineUsers.includes(user._id)
-            ? "Online"
-            : "Offline";
+        axios.put(
+            "http://localhost:5000/api/messages/seen",
+            {
+                senderId: receiverId,
+                receiverId: senderId
+            }
+        );
 
-    }
+        socket.emit("messageSeen", {
+            senderId: receiverId,
+            receiverId: senderId
+        });
 
-                loadMessages();
-
+            loadMessages();
             };
 
             chatList.appendChild(chatItem);
@@ -322,14 +332,27 @@ async function loadMessages() {
                     : "message received";
 
             div.innerHTML = `
-                ${msg.text}
-                <div class="time">
-                    ${new Date(msg.createdAt).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit"
-                    })}
-                </div>
-            `;
+    ${msg.text}
+
+    <div class="time">
+
+        ${new Date(msg.createdAt).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit"
+        })}
+
+        ${
+            msg.senderId == senderId
+                ? (msg.seen
+                    ? " ✓✓"
+                    : (msg.delivered
+                        ? " ✓"
+                        : ""))
+                : ""
+        }
+
+    </div>
+`;
 
             messagesDiv.appendChild(div);
 
@@ -392,7 +415,7 @@ if (sendBtn) {
             });
 
             messageInput.value = "";
-
+            loadMessages();
             socket.emit("stopTyping", {
                 senderId,
                 receiverId
@@ -441,5 +464,10 @@ socket.on("receiveMessage", (message) => {
     ) {
         loadMessages();
     }
+
+});
+socket.on("messageSeen", () => {
+
+    loadMessages();
 
 });

@@ -1,11 +1,9 @@
 const Message = require("../models/Message");
 
-
 // SEND MESSAGE
 const sendMessage = async (req, res) => {
 
     console.log(req.body);
-
 
     try {
 
@@ -14,7 +12,9 @@ const sendMessage = async (req, res) => {
         const newMessage = new Message({
             senderId,
             receiverId,
-            text
+            text,
+            delivered: true,
+            seen: false
         });
 
         await newMessage.save();
@@ -75,7 +75,76 @@ const getMessages = async (req, res) => {
 };
 
 
+// MARK MESSAGES AS SEEN
+const markMessagesSeen = async (req, res) => {
+
+    try {
+
+        const { senderId, receiverId } = req.body;
+
+        await Message.updateMany(
+            {
+                senderId,
+                receiverId,
+                seen: false
+            },
+            {
+                seen: true
+            }
+        );
+
+        res.status(200).json({
+            success: true,
+            message: "Messages marked as seen"
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+
+    }
+
+};
+
+// MARK MESSAGES AS SEEN
+
+const markSeen = async (req, res) => {
+
+    try {
+
+        const { senderId, receiverId } = req.body;
+
+        await Message.updateMany(
+            {
+                senderId,
+                receiverId,
+                seen: false
+            },
+            {
+                seen: true
+            }
+        );
+
+        res.json({
+            success: true
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+
+    }
+
+};
+
 module.exports = {
     sendMessage,
-    getMessages
+    getMessages,
+    markSeen
 };
