@@ -102,6 +102,9 @@ const sendBtn = document.getElementById("sendBtn");
 const messageInput = document.getElementById("messageInput");
 const messagesDiv = document.getElementById("messages");
 const chatList = document.getElementById("chatList");
+const searchUser = document.getElementById("searchUser");
+const emojiBtn = document.getElementById("emojiBtn");
+const emojiPicker = document.getElementById("emojiPicker");
 
 const socket = io("http://localhost:5000");
 
@@ -471,3 +474,61 @@ socket.on("messageSeen", () => {
     loadMessages();
 
 });
+// =========================
+// SEARCH USERS
+// =========================
+
+if (searchUser) {
+
+    searchUser.addEventListener("keyup", () => {
+
+        const value = searchUser.value.toLowerCase();
+
+        const chats = document.querySelectorAll(".chat-item");
+
+        chats.forEach(chat => {
+
+            const username = chat.querySelector("h4").innerText.toLowerCase();
+
+            if (username.includes(value)) {
+
+                chat.style.display = "flex";
+
+            } else {
+
+                chat.style.display = "none";
+
+            }
+
+        });
+
+    });
+
+}
+// =========================
+// EMOJI PICKER
+// =========================
+
+if (emojiBtn) {
+
+    emojiBtn.addEventListener("click", () => {
+
+        emojiPicker.classList.toggle("show");
+
+    });
+
+}
+
+if (emojiPicker) {
+
+    emojiPicker.addEventListener("click", (e) => {
+
+        if (e.target.tagName !== "SPAN") return;
+
+        messageInput.value += e.target.innerText;
+
+        messageInput.focus();
+
+    });
+
+}
