@@ -1,6 +1,7 @@
 const express = require("express");
 
 const router = express.Router();
+const upload = require("../middleware/upload");
 
 const {
     sendMessage,
@@ -10,8 +11,25 @@ const {
 
 
 // SEND MESSAGE
-router.post("/send", sendMessage);
+router.post("/send", (req, res, next) => {
 
+    upload.single("file")(req, res, function (err) {
+
+        if (err) {
+            console.log("MULTER ERROR:", err);
+            return res.status(500).json({
+                success: false,
+                message: err.message
+            });
+        }
+
+        console.log("REQ.FILE:", req.file);
+
+        next();
+
+    });
+
+}, sendMessage);
 
 // GET MESSAGES
 router.get("/:senderId/:receiverId", getMessages);

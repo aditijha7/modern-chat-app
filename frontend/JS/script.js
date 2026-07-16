@@ -105,6 +105,8 @@ const chatList = document.getElementById("chatList");
 const searchUser = document.getElementById("searchUser");
 const emojiBtn = document.getElementById("emojiBtn");
 const emojiPicker = document.getElementById("emojiPicker");
+const attachBtn = document.getElementById("attachBtn");
+const fileInput = document.getElementById("fileInput");
 
 const socket = io("http://localhost:5000");
 
@@ -334,8 +336,41 @@ async function loadMessages() {
                     ? "message sent"
                     : "message received";
 
-            div.innerHTML = `
-    ${msg.text}
+           let messageContent = "";
+
+if (msg.file) {
+
+    const extension = msg.file.split(".").pop().toLowerCase();
+
+    if (["jpg", "jpeg", "png", "gif", "webp"].includes(extension)) {
+
+        messageContent = `
+            <img
+                src="http://localhost:5000/uploads/${msg.file}"
+                style="max-width:220px; border-radius:10px;"
+            >
+        `;
+
+    } else {
+
+        messageContent = `
+            <a
+                href="http://localhost:5000/uploads/${msg.file}"
+                target="_blank">
+                📄 Download File
+            </a>
+        `;
+
+    }
+
+} else {
+
+    messageContent = msg.text;
+
+}
+
+div.innerHTML = `
+    ${messageContent}
 
     <div class="time">
 
@@ -528,6 +563,84 @@ if (emojiPicker) {
         messageInput.value += e.target.innerText;
 
         messageInput.focus();
+
+    });
+
+}
+// =========================
+// FILE PICKER
+// =========================
+
+if (attachBtn) {
+
+    attachBtn.addEventListener("click", () => {
+
+        fileInput.click();
+
+    });
+
+}
+
+// =========================
+// FILE PICKER
+// =========================
+
+if (attachBtn) {
+
+    attachBtn.addEventListener("click", () => {
+
+        fileInput.click();
+
+    });
+
+}
+
+if (fileInput) {
+
+    fileInput.addEventListener("change", async () => {
+
+        const file = fileInput.files[0];
+
+        if (!file || !receiverId) {
+
+            alert("Please select a user first.");
+
+            return;
+
+        }
+
+        const formData = new FormData();
+
+        formData.append("senderId", senderId);
+        formData.append("receiverId", receiverId);
+        formData.append("text", "");
+        formData.append("file", file);
+
+        try {
+
+            const response = await axios.post(
+                "http://localhost:5000/api/messages/send",
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data"
+                    }
+                }
+            );
+
+            socket.emit("sendMessage", response.data.message);
+
+            loadMessages();
+
+            fileInput.value = "";
+
+        } catch (error) {
+
+            console.log(error);
+
+            alert("File upload failed!");
+
+        }
 
     });
 

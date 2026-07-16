@@ -9,29 +9,44 @@ const sendMessage = async (req, res) => {
 
         const { senderId, receiverId, text } = req.body;
 
+            let file = "";
+
+            if (req.file) {
+
+                file = req.file.filename;
+
+            }
         const newMessage = new Message({
             senderId,
             receiverId,
             text,
+            file,
             delivered: true,
             seen: false
         });
 
         await newMessage.save();
+await newMessage.save();
 
-        res.status(201).json({
-            success: true,
-            message: newMessage
-        });
+console.log("MESSAGE SAVED:");
+console.log(newMessage);
 
-    } catch (error) {
+res.status(201).json({
+    success: true,
+    message: newMessage
+});
 
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+    }  catch (error) {
 
-    }
+    console.log("UPLOAD ERROR:");
+    console.log(error);
+
+    res.status(500).json({
+        success: false,
+        message: error.message
+    });
+
+}
 
 };
 
