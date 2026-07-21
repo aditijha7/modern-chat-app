@@ -125,6 +125,32 @@ if (senderId) {
     socket.emit("userConnected", senderId);
 
 }
+async function loadCurrentUser() {
+
+    try {
+
+        const response = await axios.get("http://localhost:5000/api/users");
+
+        const users = response.data.users;
+
+        const currentUser = users.find(user => user._id === senderId);
+
+        if (!currentUser) return;
+
+        if (currentUser.profilePic) {
+
+            document.getElementById("profilePic").src =
+                `http://localhost:5000/uploads/${currentUser.profilePic}`;
+
+        }
+
+    } catch (error) {
+
+        console.log(error);
+
+    }
+
+}
 
 let receiverId = "";
 
@@ -227,6 +253,8 @@ if (document.getElementById("username")) {
 
 if (chatList) {
 
+    loadCurrentUser();
+
     loadUsers();
 
 }
@@ -256,12 +284,19 @@ async function loadUsers() {
                 : "⚪ Offline";
 
             chatItem.innerHTML = `
-                <img src="https://i.pravatar.cc/150?u=${user._id}">
-                <div class="chat-info">
-                <h4>${user.username}</h4>
-                <small>${status}</small>
-                </div>
-            `;
+    <img
+        src="${
+            user.profilePic
+                ? `http://localhost:5000/uploads/${user.profilePic}`
+                : "./images/default-avatar.png"
+        }"
+        class="avatar">
+
+    <div class="chat-info">
+        <h4>${user.username}</h4>
+        <small>${status}</small>
+    </div>
+`;
 
             chatItem.onclick = () => {
 
@@ -645,3 +680,43 @@ if (fileInput) {
     });
 
 }
+const profilePic = document.getElementById("profilePic");
+const profileUpload = document.getElementById("profileUpload");
+
+profilePic.addEventListener("click", () => {
+
+    profileUpload.click();
+
+});
+profileUpload.addEventListener("change", async () => {
+
+    const file = profileUpload.files[0];
+
+    if (!file) return;
+
+    const formData = new FormData();
+
+    formData.append("userId", senderId);
+    formData.append("profilePic", file);
+
+    try {
+
+        const response = await axios.put(
+            "http://localhost:5000/api/users/profile-picture",
+            formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            }
+        );
+
+        console.log(response.data);
+
+    } catch (error) {
+
+        console.log(error);
+
+    }
+
+});

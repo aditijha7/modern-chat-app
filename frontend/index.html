@@ -24,17 +24,26 @@
 
     <div class="sidebar">
 
-        <div class="profile">
+        <div class="user-profile">
 
-            <img src="https://i.pravatar.cc/150?img=5">
+    <div class="profile-picture-container">
+        <img
+            id="profilePic"
+            src="./images/default-avatar.png"
+            class="profile-pic">
 
-            <div>
-                <h2 id="username"></h2>
-                <p id="typingStatus">Online</p>
-            </div>
+        <input
+            type="file"
+            id="profileUpload"
+            accept="image/*"
+            hidden>
+    </div>
 
-        </div>
+    <div class="user-info">
+        <h3 id="username"></h3>
+    </div>
 
+</div>
         <div class="search-box">
 
             <input
@@ -185,13 +194,7 @@
 <!-- YOUR SCRIPT -->
 <script src="./js/script.js"></script>
 
-<script>
 
-    // Show logged in username
-    document.getElementById("username").innerText =
-        localStorage.getItem("username");
-
-</script>
 
 </body>
 </html>

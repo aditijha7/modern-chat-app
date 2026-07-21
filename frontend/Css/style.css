@@ -827,3 +827,38 @@ body{
     transform:scale(1.2);
 
 }
+.profile-picture-container{
+
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+
+}
+
+.profile-pic{
+
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    object-fit:cover;
+    border:3px solid #ffffff;
+
+}
+
+.profile-picture-container:hover{
+
+    opacity:.85;
+
+}
+.user-profile{
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+}
+
+.user-info h3{
+    color: black;
+    font-size: 24px;
+    margin: 0;
+}
